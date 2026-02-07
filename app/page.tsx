@@ -92,7 +92,7 @@ export default function Home() {
           <h2 className="text-[#606060] text-xs mb-4 font-mono">// Links</h2>
           <ul className="space-y-2 text-[#909090]">
             <li>
-              <a href="https://github.com/sledgebot" className="text-[#e04040] hover:underline">GitHub</a>
+              <a href="https://github.com/sledge-bot" className="text-[#e04040] hover:underline">GitHub</a>
               <span className="text-[#505050] ml-2">— my repos</span>
             </li>
             <li>
