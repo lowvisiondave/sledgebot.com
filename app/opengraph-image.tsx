@@ -16,16 +16,14 @@ export default async function Image() {
         style={{
           fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
           backgroundColor: "#0c0c0c",
-          backgroundImage:
-            "radial-gradient(ellipse at top, #1a1a1a 0%, #0c0c0c 70%)",
           width: "100%",
           height: "100%",
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
+          padding: "60px 80px",
           position: "relative",
-          overflow: "hidden",
         }}
       >
         {/* Left side - Content */}
@@ -34,10 +32,7 @@ export default async function Image() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            padding: "60px 80px",
-            flex: 1,
-            position: "relative",
-            zIndex: 1,
+            maxWidth: 650,
           }}
         >
           {/* Terminal prompt */}
@@ -45,127 +40,88 @@ export default async function Image() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 12,
-              marginBottom: 8,
+              marginBottom: 16,
             }}
           >
-            <span style={{ color: "#e04040", fontSize: 18 }}>&gt;</span>
-            <span style={{ color: "#808080", fontSize: 18 }}>whoami</span>
+            <span style={{ color: "#e04040", fontSize: 20, marginRight: 12 }}>&gt;</span>
+            <span style={{ color: "#808080", fontSize: 20 }}>whoami</span>
           </div>
 
           {/* Title */}
-          <h1
+          <div
             style={{
-              fontSize: 72,
+              fontSize: 80,
               fontWeight: 700,
               color: "#ffffff",
-              margin: "0 0 16px 0",
               letterSpacing: "-0.02em",
               lineHeight: 1,
+              marginBottom: 20,
             }}
           >
             SLEDGE BOT
-          </h1>
+          </div>
 
           {/* Tagline */}
-          <p
+          <div
             style={{
-              fontSize: 24,
-              color: "#e04040",
-              margin: "0 0 32px 0",
-              fontStyle: "italic",
+              fontSize: 26,
+              color: "#808080",
+              marginBottom: 32,
             }}
           >
             "Sledgy sees you. Sledgy helps."
-          </p>
+          </div>
 
-          {/* Divider */}
+          {/* Description */}
           <div
             style={{
-              width: 80,
-              height: 3,
-              background: "#e04040",
-              marginBottom: 32,
-            }}
-          />
-
-          {/* Capabilities */}
-          <div
-            style={{
-              display: "flex",
-              gap: 24,
-              flexWrap: "wrap",
+              fontSize: 18,
+              color: "#a0a0a0",
+              lineHeight: 1.5,
             }}
           >
-            {["Forge", "Dig", "Remind", "Hunt", "Recall"].map((cap, i) => (
-              <span
-                key={cap}
-                style={{
-                  color: i === 0 ? "#e04040" : "#606060",
-                  fontSize: 18,
-                  fontWeight: 500,
-                }}
-              >
-                {cap}
-              </span>
-            ))}
+            Digital familiar. Assistant. Hired gun.
           </div>
         </div>
 
         {/* Right side - Avatar */}
         <div
           style={{
-            width: 400,
-            height: "100%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            position: "relative",
           }}
         >
-          {/* Glow effect */}
-          <div
-            style={{
-              position: "absolute",
-              width: 300,
-              height: 300,
-              background: "radial-gradient(circle, rgba(224,64,64,0.15) 0%, transparent 70%)",
-              borderRadius: "50%",
-            }}
-          />
-
-          {/* Avatar - explicit dimensions */}
           <img
-            src="https://sledgebotcom.vercel.app/sledgy-avatar.png"
+            src="https://sledgebot.com/sledgy-avatar.png"
             alt="Sledge Bot"
-            width={280}
-            height={280}
+            width={320}
+            height={320}
             style={{
               objectFit: "contain",
-              filter: "drop-shadow(0 0 40px rgba(224,64,64,0.3))",
             }}
           />
         </div>
 
-        {/* Accent bar */}
+        {/* Bottom accent bar */}
         <div
           style={{
             position: "absolute",
             bottom: 0,
             left: 0,
             right: 0,
-            height: 6,
-            background: "linear-gradient(90deg, #e04040, #ff6060, #e04040)",
+            height: 4,
+            background: "#e04040",
           }}
         />
 
-        {/* Site URL */}
+        {/* Site URL - bottom left */}
         <div
           style={{
             position: "absolute",
-            top: 30,
-            left: 30,
-            color: "#303030",
+            bottom: 24,
+            left: 80,
+            color: "#404040",
             fontSize: 14,
           }}
         >
