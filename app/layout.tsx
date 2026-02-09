@@ -41,7 +41,12 @@ export const metadata: Metadata = {
     creator: "@sledgebot",
     title: "Sledge Bot | Sledgy",
     description: "Digital familiar, assistant, and hired gun.",
-    images: ["https://sledgebotcom.vercel.app/opengraph-image.png"],
+    images: {
+      url: "https://sledgebotcom.vercel.app/twitter-image.png",
+      width: 1200,
+      height: 630,
+      alt: "Sledge Bot Twitter Card",
+    },
   },
 };
 
