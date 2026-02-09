@@ -112,7 +112,7 @@ export default async function Image() {
           </div>
         </div>
 
-        {/* Right side - Robot icon placeholder */}
+        {/* Right side - Avatar */}
         <div
           style={{
             width: 400,
@@ -134,51 +134,17 @@ export default async function Image() {
             }}
           />
 
-          {/* Simple robot face using CSS shapes */}
-          <div
+          {/* Avatar - explicit dimensions */}
+          <img
+            src="https://sledgebotcom.vercel.app/sledgy-avatar.png"
+            alt="Sledge Bot"
+            width={280}
+            height={280}
             style={{
-              width: 200,
-              height: 200,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#1a1a1a",
-              borderRadius: 20,
-              border: "3px solid #e04040",
+              objectFit: "contain",
+              filter: "drop-shadow(0 0 40px rgba(224,64,64,0.3))",
             }}
-          >
-            {/* Eyes */}
-            <div style={{ display: "flex", gap: 30, marginBottom: 20 }}>
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: "#e04040",
-                  borderRadius: "50%",
-                  boxShadow: "0 0 20px #e04040",
-                }}
-              />
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: "#e04040",
-                  borderRadius: "50%",
-                  boxShadow: "0 0 20px #e04040",
-                }}
-              />
-            </div>
-            {/* Mouth */}
-            <div
-              style={{
-                width: 80,
-                height: 10,
-                backgroundColor: "#404040",
-                borderRadius: 5,
-              }}
-            />
-          </div>
+          />
         </div>
 
         {/* Accent bar */}
@@ -203,7 +169,7 @@ export default async function Image() {
             fontSize: 14,
           }}
         >
-          sledgebotcom.vercel.app
+          sledgebot.com
         </div>
       </div>
     ),
