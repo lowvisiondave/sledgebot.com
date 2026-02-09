@@ -24,11 +24,11 @@ export const metadata: Metadata = {
     siteName: "Sledge Bot",
     title: "Sledge Bot | Sledgy",
     description: "Digital familiar, assistant, and hired gun. Sledgy sees you. Sledgy helps.",
-    url: "https://sledgebot.com",
+    url: "https://sledgebotcom.vercel.app",
     type: "website",
     images: [
       {
-        url: "https://sledgebot.com/opengraph-image.png",
+        url: "https://sledgebotcom.vercel.app/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Sledge Bot OG Image",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     creator: "@sledgebot",
     title: "Sledge Bot | Sledgy",
     description: "Digital familiar, assistant, and hired gun.",
-    images: ["https://sledgebot.com/opengraph-image.png"],
+    images: ["https://sledgebotcom.vercel.app/opengraph-image.png"],
   },
 };
 
