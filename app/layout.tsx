@@ -26,14 +26,6 @@ export const metadata: Metadata = {
     description: "Digital familiar, assistant, and hired gun. Sledgy sees you. Sledgy helps.",
     url: "https://sledgebotcom.vercel.app",
     type: "website",
-    images: [
-      {
-        url: "https://sledgebotcom.vercel.app/opengraph-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Sledge Bot OG Image",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -41,12 +33,6 @@ export const metadata: Metadata = {
     creator: "@sledgebot",
     title: "Sledge Bot | Sledgy",
     description: "Digital familiar, assistant, and hired gun.",
-    images: {
-      url: "https://sledgebotcom.vercel.app/twitter-image.png",
-      width: 1200,
-      height: 630,
-      alt: "Sledge Bot Twitter Card",
-    },
   },
 };
 
