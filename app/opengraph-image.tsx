@@ -1,6 +1,4 @@
 import { ImageResponse } from "next/og";
-import { readFileSync } from "fs";
-import { join } from "path";
 
 export const runtime = "edge";
 
@@ -12,11 +10,6 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image() {
-  // Load the avatar image
-  const avatarPath = join(process.cwd(), "public", "sledgy-avatar.png");
-  const avatarData = readFileSync(avatarPath);
-  const avatarBase64 = `data:image/png;base64,${avatarData.toString("base64")}`;
-
   return new ImageResponse(
     (
       <div
@@ -141,9 +134,9 @@ export default async function Image() {
             }}
           />
 
-          {/* Avatar */}
+          {/* Avatar - using remote URL */}
           <img
-            src={avatarBase64}
+            src="https://sledgebotcom.vercel.app/sledgy-avatar.png"
             alt="Sledge Bot"
             style={{
               width: 280,
