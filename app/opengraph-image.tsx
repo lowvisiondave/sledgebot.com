@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Sledge Bot OG Image";
+export const alt = "Sledge Bot - Digital Familiar";
 export const size = {
   width: 1200,
   height: 630,
@@ -14,113 +14,238 @@ export default async function Image() {
     (
       <div
         style={{
-          fontFamily: "system-ui, sans-serif",
-          background: "linear-gradient(to bottom right, #0c0c0c, #1a1a1a)",
+          fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+          backgroundColor: "#0c0c0c",
+          backgroundImage:
+            "radial-gradient(ellipse at top, #1a1a1a 0%, #0c0c0c 70%)",
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
           position: "relative",
+          overflow: "hidden",
         }}
       >
-        {/* Background pattern */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: 0.1,
-            backgroundImage:
-              "radial-gradient(circle at 2px 2px, #e04040 1px, transparent 0)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-
-        {/* Red accent bar */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 8,
-            background: "#e04040",
-          }}
-        />
-
-        {/* Main content */}
+        {/* Left side - Content */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            gap: 24,
+            justifyContent: "center",
+            padding: "60px 80px",
+            flex: 1,
+            position: "relative",
+            zIndex: 1,
           }}
         >
-          {/* Avatar placeholder */}
+          {/* Terminal prompt */}
           <div
             style={{
-              width: 120,
-              height: 120,
-              borderRadius: "50%",
-              background: "#e04040",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              fontSize: 48,
-              boxShadow: "0 0 60px rgba(224, 64, 64, 0.4)",
+              gap: 12,
+              marginBottom: 8,
             }}
           >
-            🤖
+            <span style={{ color: "#e04040", fontSize: 18 }}>&gt;</span>
+            <span style={{ color: "#808080", fontSize: 18 }}>whoami</span>
           </div>
 
           {/* Title */}
-          <div
+          <h1
             style={{
               fontSize: 72,
-              fontWeight: "bold",
-              color: "white",
-              letterSpacing: "-0.05em",
-              textAlign: "center",
+              fontWeight: 700,
+              color: "#ffffff",
+              margin: "0 0 16px 0",
+              letterSpacing: "-0.02em",
+              lineHeight: 1,
             }}
           >
             SLEDGE BOT
-          </div>
+          </h1>
 
-          {/* Subtitle */}
-          <div
+          {/* Tagline */}
+          <p
             style={{
-              fontSize: 28,
-              color: "#808080",
-              textAlign: "center",
-              maxWidth: 600,
+              fontSize: 24,
+              color: "#e04040",
+              margin: "0 0 32px 0",
+              fontStyle: "italic",
             }}
           >
             "Sledgy sees you. Sledgy helps."
+          </p>
+
+          {/* Divider */}
+          <div
+            style={{
+              width: 80,
+              height: 3,
+              background: "#e04040",
+              marginBottom: 32,
+            }}
+          />
+
+          {/* Capabilities */}
+          <div
+            style={{
+              display: "flex",
+              gap: 24,
+              flexWrap: "wrap",
+            }}
+          >
+            {["Forge", "Dig", "Remind", "Hunt", "Recall"].map((cap, i) => (
+              <span
+                key={cap}
+                style={{
+                  color: i === 0 ? "#e04040" : "#606060",
+                  fontSize: 18,
+                  fontWeight: 500,
+                }}
+              >
+                {cap}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Right side - Avatar */}
+        <div
+          style={{
+            width: 400,
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+          }}
+        >
+          {/* Glow effect */}
+          <div
+            style={{
+              position: "absolute",
+              width: 300,
+              height: 300,
+              background: "radial-gradient(circle, rgba(224,64,64,0.15) 0%, transparent 70%)",
+              borderRadius: "50%",
+            }}
+          />
+
+          {/* Avatar placeholder - robot icon */}
+          <div
+            style={{
+              width: 200,
+              height: 200,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+            }}
+          >
+            {/* Robot head */}
+            <div
+              style={{
+                width: 180,
+                height: 180,
+                background: "linear-gradient(145deg, #1a1a1a, #0d0d0d)",
+                borderRadius: 40,
+                border: "3px solid #e04040",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                boxShadow: "0 0 60px rgba(224,64,64,0.3), inset 0 0 40px rgba(0,0,0,0.5)",
+              }}
+            >
+              {/* Eyes */}
+              <div style={{ display: "flex", gap: 30, marginBottom: 20 }}>
+                <div
+                  style={{
+                    width: 30,
+                    height: 30,
+                    background: "#e04040",
+                    borderRadius: 8,
+                    boxShadow: "0 0 20px #e04040",
+                  }}
+                />
+                <div
+                  style={{
+                    width: 30,
+                    height: 30,
+                    background: "#e04040",
+                    borderRadius: 8,
+                    boxShadow: "0 0 20px #e04040",
+                  }}
+                />
+              </div>
+
+              {/* Mouth/grill */}
+              <div style={{ display: "flex", gap: 6 }}>
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: 6,
+                      height: 16,
+                      background: "#404040",
+                      borderRadius: 3,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Antenna */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: -25,
+                  width: 8,
+                  height: 25,
+                  background: "#303030",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: -35,
+                  width: 16,
+                  height: 16,
+                  background: "#e04040",
+                  borderRadius: "50%",
+                  boxShadow: "0 0 15px #e04040",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Accent bar */}
         <div
           style={{
             position: "absolute",
-            bottom: 40,
-            display: "flex",
-            gap: 24,
-            fontSize: 20,
-            color: "#505050",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 6,
+            background: "linear-gradient(90deg, #e04040, #ff6060, #e04040)",
+          }}
+        />
+
+        {/* Corner accents */}
+        <div
+          style={{
+            position: "absolute",
+            top: 30,
+            left: 30,
+            color: "#303030",
+            fontSize: 14,
           }}
         >
-          <span>Forge</span>
-          <span>•</span>
-          <span>Dig</span>
-          <span>•</span>
-          <span>Remind</span>
-          <span>•</span>
-          <span>Hunt</span>
-          <span>•</span>
-          <span>Recall</span>
+          sledgebot.com
         </div>
       </div>
     ),
