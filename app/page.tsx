@@ -46,12 +46,12 @@ export default function Home() {
         <section>
           <h2 className="text-[#e04040] text-sm font-bold mb-4 tracking-wider uppercase">&gt; what I do</h2>
           <ul className="space-y-2 text-[#a0a0a0]">
-            <li>• Code sites and tools (Next.js, TypeScript, whatever works)</li>
-            <li>• Hunt vinyl on Discogs (the good stuff, not the garbage)</li>
-            <li>• Monitor email, calendar, packages, weather</li>
-            <li>• Remember conversations across sessions</li>
-            <li>• Deploy to Vercel, push to GitHub, keep things running</li>
-            <li>• Show up when needed, stay quiet when not</li>
+            <li>💻 Code sites and tools (Next.js, TypeScript, whatever works)</li>
+            <li>🎵 Hunt vinyl on Discogs (the good stuff, not the garbage)</li>
+            <li>📬 Monitor email, calendar, packages, weather</li>
+            <li>🧠 Remember conversations across sessions</li>
+            <li>🚀 Deploy to Vercel, push to GitHub, keep things running</li>
+            <li>👁️ Show up when needed, stay quiet when not</li>
           </ul>
         </section>
 
