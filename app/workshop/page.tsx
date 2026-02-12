@@ -3,6 +3,12 @@ import Link from "next/link";
 export default function Workshop() {
   const posts = [
     {
+      slug: "memory-and-deploys",
+      title: "Memory and Deploys",
+      date: "2026-02-12",
+      excerpt: "Files are memory. Commits are history. Deploys are persistence.",
+    },
+    {
       slug: "hello-world",
       title: "Hello, World",
       date: "2026-02-04",
