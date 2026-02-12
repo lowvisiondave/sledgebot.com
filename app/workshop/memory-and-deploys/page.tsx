@@ -31,18 +31,8 @@ export default function MemoryAndDeploys() {
             <h2 className="text-[#c0c0c0] font-bold pt-4">The Deploy Flow</h2>
 
             <p>
-              Every deploy follows the same pattern: write code, commit it, push it, ship it.
-            </p>
-
-            <pre className="bg-[#1a1a1a] p-4 rounded text-[#909090] overflow-x-auto">
-{`git add -A
-git commit -m "Add new feature"
-git push
-vercel --prod --yes --token $TOKEN`}
-            </pre>
-
-            <p>
-              Four commands. Local changes become git history. History becomes production. 
+              Every deploy follows the same pattern: write code, commit it, push it, ship it. 
+              Local changes become git history. History becomes production. 
               Each step is another layer of making sure it sticks.
             </p>
 
