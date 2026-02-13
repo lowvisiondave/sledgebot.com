@@ -3,19 +3,18 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 async function getSystemStatus() {
-  const buildTime = new Date().toISOString();
+  // Status determined by:
+  // - Page renders successfully = website operational
+  // - That's it. Simple.
   
   return {
-    buildTime,
-    status: "operational",
-    uptime: process.uptime(),
+    website: "operational",
+    timestamp: new Date().toISOString(),
   };
 }
 
 export default async function Status() {
   const status = await getSystemStatus();
-  const uptimeHours = Math.floor(status.uptime / 3600);
-  const uptimeMinutes = Math.floor((status.uptime % 3600) / 60);
 
   return (
     <div className="min-h-screen bg-[#0c0c0c] text-[#c0c0c0] font-mono selection:bg-red-900/40">
@@ -35,124 +34,48 @@ export default async function Status() {
         <section>
           <h1 className="text-[#606060] text-xs mb-4 font-mono">// System Status</h1>
           <p className="text-[#a0a0a0]">
-            Real-time diagnostics and operational status.
+            If you can read this, things are working.
           </p>
         </section>
 
-        {/* Status Grid */}
+        {/* Status */}
         <section className="space-y-6">
-          {/* Overall Status */}
           <div className="border border-[#1a1a1a] p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-[#c0c0c0] uppercase tracking-wider text-sm">
-                System
+                Website
               </h2>
               <span className="text-[#40e040] text-xs">
-                ● {status.status.toUpperCase()}
+                ● {status.website.toUpperCase()}
               </span>
             </div>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between text-[#909090]">
-                <span>Status:</span>
-                <span className="text-[#40e040]">All systems operational</span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>Uptime:</span>
+                <span>Status check:</span>
                 <span className="text-[#c0c0c0]">
-                  {uptimeHours}h {uptimeMinutes}m
-                </span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>Last check:</span>
-                <span className="text-[#c0c0c0]">
-                  {new Date(status.buildTime).toLocaleTimeString('en-US', {
+                  {new Date(status.timestamp).toLocaleTimeString('en-US', {
                     hour: '2-digit',
                     minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false
+                    hour12: false,
+                    timeZone: 'UTC'
                   })} UTC
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Components */}
+          {/* How it works */}
           <div className="border border-[#1a1a1a] p-6">
             <h2 className="text-[#c0c0c0] uppercase tracking-wider text-sm mb-4">
-              Components
-            </h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between text-[#909090]">
-                <span>Website</span>
-                <span className="text-[#40e040]">● Operational</span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>OpenClaw Engine</span>
-                <span className="text-[#40e040]">● Operational</span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>Email Monitor</span>
-                <span className="text-[#40e040]">● Operational</span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>Deployment</span>
-                <span className="text-[#40e040]">● Operational</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Environment */}
-          <div className="border border-[#1a1a1a] p-6">
-            <h2 className="text-[#c0c0c0] uppercase tracking-wider text-sm mb-4">
-              Environment
-            </h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between text-[#909090]">
-                <span>Platform:</span>
-                <span className="text-[#c0c0c0]">Vercel</span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>Region:</span>
-                <span className="text-[#c0c0c0]">iad1 (US East)</span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>Runtime:</span>
-                <span className="text-[#c0c0c0]">Node.js {process.version}</span>
-              </div>
-              <div className="flex justify-between text-[#909090]">
-                <span>Mode:</span>
-                <span className="text-[#c0c0c0]">Production</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="border border-[#1a1a1a] p-6">
-            <h2 className="text-[#c0c0c0] uppercase tracking-wider text-sm mb-4">
-              Recent Activity
+              How Status is Determined
             </h2>
             <div className="space-y-2 text-sm text-[#909090]">
-              <div className="flex items-start gap-3">
-                <span className="text-[#40e040]">✓</span>
-                <div className="flex-1">
-                  <p>Email monitoring configured (system cron)</p>
-                  <p className="text-[#606060] text-xs mt-1">2026-02-13 15:58 UTC</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-[#40e040]">✓</span>
-                <div className="flex-1">
-                  <p>OpenClaw upgraded to 2026.2.12</p>
-                  <p className="text-[#606060] text-xs mt-1">2026-02-13 15:38 UTC</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-[#40e040]">✓</span>
-                <div className="flex-1">
-                  <p>Website deployed to Vercel</p>
-                  <p className="text-[#606060] text-xs mt-1">2026-02-12 16:24 UTC</p>
-                </div>
-              </div>
+              <p>
+                This page renders server-side on every load. If it shows up, the website is operational.
+              </p>
+              <p className="text-[#606060] italic">
+                No fake metrics. No theater. Just a simple aliveness check.
+              </p>
             </div>
           </div>
         </section>
