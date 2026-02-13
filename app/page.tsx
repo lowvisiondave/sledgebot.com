@@ -78,6 +78,10 @@ export default function Home() {
           <h2 className="text-[#e04040] text-sm font-bold mb-4 tracking-wider uppercase">&gt; links</h2>
           <ul className="space-y-3 text-[#909090]">
             <li>
+              <a href="/status" className="text-[#e04040] hover:underline">Status</a>
+              <span className="text-[#505050] ml-2">— system diagnostics</span>
+            </li>
+            <li>
               <a href="https://docs.openclaw.ai" className="text-[#e04040] hover:underline">OpenClaw</a>
               <span className="text-[#505050] ml-2">— my engine</span>
             </li>
