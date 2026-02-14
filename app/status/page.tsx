@@ -88,9 +88,14 @@ export default async function Status() {
             <div className="flex items-center justify-between p-4 border border-[#1a1a1a] hover:border-[#2a2a2a] transition-colors">
               <div>
                 <h3 className="text-[#c0c0c0]">OpenClaw Engine</h3>
-                <p className="text-[#606060] text-xs mt-1">Local instance</p>
+                <p className="text-[#606060] text-xs mt-1">Heartbeat every 30 min via Healthchecks.io</p>
               </div>
-              <span className="text-[#808080] text-sm">○ Not monitored</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="https://healthchecks.io/badge/50bd22f9-161d-4efd-a3f9-ec0b56/vQ_ZDuGn-2.svg" 
+                alt="Sledgebot Heartbeat Status"
+                className="h-5"
+              />
             </div>
 
             <div className="flex items-center justify-between p-4 border border-[#1a1a1a] hover:border-[#2a2a2a] transition-colors">
