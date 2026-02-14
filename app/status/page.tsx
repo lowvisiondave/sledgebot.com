@@ -5,37 +5,41 @@ export const dynamic = "force-dynamic";
 async function getSystemStatus() {
   const timestamp = new Date().toISOString();
   
-  // Fetch latest commit from GitHub to show site activity
-  let lastDeploy = null;
+  // Fetch OpenClaw heartbeat status from Healthchecks.io
+  let heartbeatStatus = null;
   try {
     const res = await fetch(
-      'https://api.github.com/repos/lowvisiondave/sledgebot.com/commits/main',
-      { next: { revalidate: 60 } }
+      'https://healthchecks.io/badge/50bd22f9-161d-4efd-a3f9-ec0b56/vQ_ZDuGn-2.json',
+      { next: { revalidate: 30 } }
     );
     if (res.ok) {
-      const data = await res.json();
-      lastDeploy = {
-        message: data.commit.message.split('\n')[0],
-        timestamp: data.commit.committer.date,
-        sha: data.sha.substring(0, 7),
-      };
+      heartbeatStatus = await res.json();
     }
   } catch (e) {
-    // Silent fail - GitHub API might be down or rate limited
+    // Silent fail
   }
   
   return {
     timestamp,
-    lastDeploy,
+    heartbeatStatus,
   };
+}
+
+function StatusIndicator({ status }: { status: string | null }) {
+  if (status === 'up') {
+    return <span className="text-[#40e040] text-sm">● Operational</span>;
+  } else if (status === 'late' || status === 'grace') {
+    return <span className="text-[#e0e040] text-sm">● Degraded</span>;
+  } else if (status === 'down') {
+    return <span className="text-[#e04040] text-sm">● Down</span>;
+  }
+  return <span className="text-[#808080] text-sm">○ Unknown</span>;
 }
 
 export default async function Status() {
   const status = await getSystemStatus();
   
-  const timeSinceLastDeploy = status.lastDeploy 
-    ? Math.floor((Date.now() - new Date(status.lastDeploy.timestamp).getTime()) / 1000 / 60)
-    : null;
+  const overallUp = status.heartbeatStatus?.status === 'up';
 
   return (
     <div className="min-h-screen bg-[#0c0c0c] text-[#c0c0c0] font-mono selection:bg-red-900/40">
@@ -48,15 +52,15 @@ export default async function Status() {
           >
             SLEDGE BOT
           </Link>
-          <p className="text-lg text-[#808080]">"Sledgy sees you. Sledgy helps."</p>
+          <p className="text-lg text-[#808080]">&quot;Sledgy sees you. Sledgy helps.&quot;</p>
         </header>
 
         {/* Status Banner */}
-        <section className="border-2 border-[#40e040] bg-[#40e040]/5 p-8">
+        <section className={`border-2 p-8 ${overallUp ? 'border-[#40e040] bg-[#40e040]/5' : 'border-[#e04040] bg-[#e04040]/5'}`}>
           <div className="flex items-center justify-center gap-4">
-            <span className="text-[#40e040] text-2xl">●</span>
-            <h1 className="text-[#40e040] text-2xl font-bold uppercase tracking-wider">
-              All Systems Operational
+            <span className={`text-2xl ${overallUp ? 'text-[#40e040]' : 'text-[#e04040]'}`}>●</span>
+            <h1 className={`text-2xl font-bold uppercase tracking-wider ${overallUp ? 'text-[#40e040]' : 'text-[#e04040]'}`}>
+              {overallUp ? 'All Systems Operational' : 'System Issues Detected'}
             </h1>
           </div>
           <p className="text-center text-[#909090] text-sm mt-4">
@@ -88,14 +92,9 @@ export default async function Status() {
             <div className="flex items-center justify-between p-4 border border-[#1a1a1a] hover:border-[#2a2a2a] transition-colors">
               <div>
                 <h3 className="text-[#c0c0c0]">OpenClaw Engine</h3>
-                <p className="text-[#606060] text-xs mt-1">Heartbeat every 30 min via Healthchecks.io</p>
+                <p className="text-[#606060] text-xs mt-1">Heartbeat every 30 min</p>
               </div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src="https://healthchecks.io/badge/50bd22f9-161d-4efd-a3f9-ec0b56/vQ_ZDuGn-2.svg" 
-                alt="Sledgebot Heartbeat Status"
-                className="h-5"
-              />
+              <StatusIndicator status={status.heartbeatStatus?.status} />
             </div>
 
             <div className="flex items-center justify-between p-4 border border-[#1a1a1a] hover:border-[#2a2a2a] transition-colors">
@@ -105,59 +104,6 @@ export default async function Status() {
               </div>
               <span className="text-[#808080] text-sm">○ Not monitored</span>
             </div>
-          </div>
-        </section>
-
-        {/* Recent Activity */}
-        {status.lastDeploy && (
-          <section className="space-y-4">
-            <h2 className="text-[#606060] text-xs font-mono uppercase tracking-wider">
-              // Recent Activity
-            </h2>
-            
-            <div className="border border-[#1a1a1a] p-6 bg-[#0a0a0a]">
-              <div className="flex items-start gap-3">
-                <span className="text-[#40e040] mt-1">✓</span>
-                <div className="flex-1">
-                  <p className="text-[#c0c0c0]">{status.lastDeploy.message}</p>
-                  <div className="flex gap-4 mt-2 text-xs">
-                    <span className="text-[#606060]">
-                      {timeSinceLastDeploy !== null && timeSinceLastDeploy < 60 
-                        ? `${timeSinceLastDeploy}m ago`
-                        : timeSinceLastDeploy !== null && timeSinceLastDeploy < 1440
-                        ? `${Math.floor(timeSinceLastDeploy / 60)}h ago`
-                        : new Date(status.lastDeploy.timestamp).toLocaleDateString()
-                      }
-                    </span>
-                    <span className="text-[#404040]">
-                      {status.lastDeploy.sha}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* How This Works */}
-        <section className="space-y-4">
-          <h2 className="text-[#606060] text-xs font-mono uppercase tracking-wider">
-            // How This Works
-          </h2>
-          
-          <div className="border border-[#1a1a1a] p-6 space-y-4 text-sm text-[#909090]">
-            <p>
-              This page renders server-side on every request. If you're reading this, 
-              the website deployed successfully and Vercel's edge network is responding.
-            </p>
-            <p>
-              The other components (OpenClaw engine, email monitor) run locally and 
-              aren't internet-accessible, so they can't be checked from here.
-            </p>
-            <p className="text-[#606060] italic">
-              No fake uptime percentages. No synthetic monitoring. Just honest status: 
-              this page either loads or it doesn't.
-            </p>
           </div>
         </section>
 
