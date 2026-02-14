@@ -119,6 +119,14 @@ export default async function Status() {
           
           <div className="text-sm space-y-2 pl-6 border-l border-[#1a1a1a]">
             <p>
+              <span className="text-[#505050]">engine</span>{' '}
+              <span className="text-[#808080]">OpenClaw</span>
+            </p>
+            <p>
+              <span className="text-[#505050]">uptime</span>{' '}
+              <span className="text-[#808080]">nominal</span>
+            </p>
+            <p>
               <span className="text-[#505050]">checked</span>{' '}
               <span className="text-[#808080]">
                 {new Date(status.timestamp).toLocaleTimeString('en-US', {
