@@ -17,11 +17,46 @@ async function getSystemStatus() {
   } catch (e) {
     // Silent fail
   }
+
+  // Fetch latest commit from GitHub
+  let lastCommit = null;
+  try {
+    const res = await fetch(
+      'https://api.github.com/repos/lowvisiondave/sledgebot.com/commits/main',
+      { next: { revalidate: 300 } }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      lastCommit = {
+        sha: data.sha.substring(0, 7),
+        date: data.commit.committer.date,
+      };
+    }
+  } catch (e) {
+    // Silent fail
+  }
   
   return {
     timestamp,
     heartbeatStatus,
+    lastCommit,
   };
+}
+
+function StatusLine({ label, status, ok }: { label: string; status: string; ok: boolean | null }) {
+  const color = ok === true ? 'text-[#40e040]' : ok === false ? 'text-[#e04040]' : 'text-[#e0e040]';
+  const icon = ok === true ? '■' : ok === false ? '□' : '◧';
+  
+  return (
+    <div className="flex items-center font-mono text-sm">
+      <span className={color}>{icon}</span>
+      <span className="text-[#808080] ml-2 w-12">{label}</span>
+      <span className="text-[#303030] flex-1 overflow-hidden whitespace-nowrap">
+        {'·'.repeat(30)}
+      </span>
+      <span className={`${color} ml-2`}>{status}</span>
+    </div>
+  );
 }
 
 export default async function Status() {
@@ -30,6 +65,14 @@ export default async function Status() {
   const engineUp = status.heartbeatStatus?.status === 'up';
   const engineLate = status.heartbeatStatus?.status === 'late' || status.heartbeatStatus?.status === 'grace';
   const allUp = engineUp;
+
+  // Calculate time since last commit
+  const commitAge = status.lastCommit ? Math.floor((Date.now() - new Date(status.lastCommit.date).getTime()) / 1000 / 60) : null;
+  const commitAgeStr = commitAge !== null 
+    ? commitAge < 60 ? `${commitAge}m ago`
+    : commitAge < 1440 ? `${Math.floor(commitAge / 60)}h ago`
+    : `${Math.floor(commitAge / 1440)}d ago`
+    : null;
 
   return (
     <div className="min-h-screen bg-[#0c0c0c] text-[#c0c0c0] font-mono selection:bg-red-900/40">
@@ -58,54 +101,41 @@ export default async function Status() {
               </span>
             </div>
 
-            {/* ASCII-style system readout */}
-            <div className="font-mono text-sm space-y-1 pl-6 border-l border-[#1a1a1a]">
-              <div className="flex items-center gap-2">
-                <span className={engineUp ? 'text-[#40e040]' : engineLate ? 'text-[#e0e040]' : 'text-[#e04040]'}>
-                  {engineUp ? '■' : engineLate ? '◧' : '□'}
-                </span>
-                <span className="text-[#808080]">CORE</span>
-                <span className="text-[#505050]">................</span>
-                <span className={engineUp ? 'text-[#40e040]' : engineLate ? 'text-[#e0e040]' : 'text-[#e04040]'}>
-                  {engineUp ? 'ONLINE' : engineLate ? 'LATE' : 'OFFLINE'}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#40e040]">■</span>
-                <span className="text-[#808080]">WEB</span>
-                <span className="text-[#505050]">..................</span>
-                <span className="text-[#40e040]">ONLINE</span>
-              </div>
+            {/* System readout */}
+            <div className="space-y-1 pl-6 border-l border-[#1a1a1a]">
+              <StatusLine 
+                label="CORE" 
+                status={engineUp ? 'ONLINE' : engineLate ? 'LATE' : 'OFFLINE'} 
+                ok={engineUp ? true : engineLate ? null : false} 
+              />
+              <StatusLine label="WEB" status="ONLINE" ok={true} />
             </div>
           </div>
         </section>
 
-        {/* Diagnostics */}
+        {/* Info */}
         <section className="space-y-6">
-          <h2 className="text-[#e04040] text-sm font-bold tracking-wider uppercase">&gt; diagnostics</h2>
+          <h2 className="text-[#e04040] text-sm font-bold tracking-wider uppercase">&gt; info</h2>
           
-          <div className="text-sm text-[#606060] space-y-2">
+          <div className="text-sm space-y-2 pl-6 border-l border-[#1a1a1a]">
             <p>
-              <span className="text-[#808080]">last_ping:</span>{' '}
-              {new Date(status.timestamp).toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false,
-                timeZone: 'UTC'
-              })} UTC
+              <span className="text-[#505050]">checked</span>{' '}
+              <span className="text-[#808080]">
+                {new Date(status.timestamp).toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                  timeZone: 'UTC'
+                })} UTC
+              </span>
             </p>
-            <p>
-              <span className="text-[#808080]">uptime_check:</span>{' '}
-              <a 
-                href="https://healthchecks.io" 
-                className="text-[#505050] hover:text-[#e04040] transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                healthchecks.io
-              </a>
-            </p>
+            {status.lastCommit && (
+              <p>
+                <span className="text-[#505050]">last_deploy</span>{' '}
+                <span className="text-[#808080]">{commitAgeStr}</span>
+                <span className="text-[#303030] ml-2">({status.lastCommit.sha})</span>
+              </p>
+            )}
           </div>
         </section>
 
