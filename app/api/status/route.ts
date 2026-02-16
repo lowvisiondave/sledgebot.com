@@ -42,8 +42,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use SDK to set the status
-    const edgeConfig = createClient(edgeConfigUrl);
+    // Use SDK to set the status (cast to any - SDK supports it but types are incomplete)
+    const edgeConfig = createClient(edgeConfigUrl) as any;
     await edgeConfig.set("sledgebot-status", result.data);
 
     return NextResponse.json({ success: true, data: result.data });
