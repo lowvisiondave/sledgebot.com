@@ -64,11 +64,13 @@ export async function POST(request: NextRequest) {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          items: {
-            "sledgebot:status": result.data,
-          },
-        }),
+        body: JSON.stringify([
+          { 
+            operation: "upsert", 
+            key: "sledgebot:status", 
+            value: result.data 
+          }
+        ]),
       }
     );
 
