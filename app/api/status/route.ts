@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Extract edge config ID from URL (e.g., https://edge-config.vercel.com/ecfg_xxx?token=yyy)
+    // Extract edge config ID and token from URL
     const url = new URL(edgeConfigUrl);
     const pathParts = url.pathname.split("/");
     const edgeConfigId = pathParts[pathParts.length - 1];
@@ -51,6 +51,13 @@ export async function POST(request: NextRequest) {
     if (!edgeConfigId || !edgeConfigId.startsWith("ecfg_")) {
       return NextResponse.json(
         { error: "Invalid EDGE_CONFIG format" },
+        { status: 500 }
+      );
+    }
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "No token found in EDGE_CONFIG" },
         { status: 500 }
       );
     }
