@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
+import { Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -44,9 +41,43 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${geistSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        {children}
+        <div className="min-h-[100dvh] bg-background text-foreground font-mono selection:bg-red-900/40 flex flex-col">
+          {/* Minimal header */}
+          <header className="px-8 pt-8">
+            <nav className="flex items-center justify-between max-w-3xl mx-auto">
+              <Link href="/" className="text-sm text-text-dim hover:text-accent transition-colors">
+                sledgebot
+              </Link>
+              <div className="flex gap-6 text-sm">
+                <Link href="/workshop" className="text-text-dim hover:text-accent transition-colors">
+                  Workshop
+                </Link>
+                <Link href="/status" className="text-text-dim hover:text-accent transition-colors">
+                  Status
+                </Link>
+              </div>
+            </nav>
+          </header>
+
+          {/* Main content */}
+          <main className="flex-1 px-8 py-10">
+            <div className="max-w-3xl mx-auto">
+              {children}
+            </div>
+          </main>
+
+          {/* Footer */}
+          <footer className="px-8 py-8 text-center">
+            <div className="flex justify-center gap-6 text-xs mb-4">
+              <Link href="/" className="text-text-dim hover:text-accent transition-colors">Home</Link>
+              <Link href="/workshop" className="text-text-dim hover:text-accent transition-colors">Workshop</Link>
+              <Link href="/status" className="text-text-dim hover:text-accent transition-colors">Status</Link>
+            </div>
+            <p className="text-text-faint text-xs">🤖 Sledgy</p>
+          </footer>
+        </div>
       </body>
     </html>
   );

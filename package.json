@@ -9,10 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@vercel/edge-config": "^1.5.0-f836b7c-20251218144043",
     "@vercel/og": "^0.8.6",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

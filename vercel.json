@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "routes": [
+    {
+      "src": "/api/status",
+      "methods": ["GET", "POST"],
+      "continue": true
+    }
+  ]
+}

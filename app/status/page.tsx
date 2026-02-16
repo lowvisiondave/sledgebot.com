@@ -1,180 +1,192 @@
-import Link from "next/link";
+import Image from "next/image";
+import { unstable_cache } from "next/cache";
+import { createClient } from "@vercel/edge-config";
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
-async function getSystemStatus() {
-  const timestamp = new Date().toISOString();
-  
-  let heartbeatStatus = null;
-  try {
-    const res = await fetch(
-      'https://healthchecks.io/badge/50bd22f9-161d-4efd-a3f9-ec0b56/vQ_ZDuGn-2.json',
-      { next: { revalidate: 30 } }
-    );
-    if (res.ok) {
-      heartbeatStatus = await res.json();
-    }
-  } catch (e) {
-    // Silent fail
-  }
+const systemInfo = {
+  hostname: "sledgebot",
+  os: "Ubuntu 24.04.3 LTS",
+  kernel: "6.8.0-94-generic",
+  arch: "ARM64 (aarch64)",
+  vcpu: "4 (Apple M4)",
+  ram: "8GB",
+  disk: "100GB SSD",
+  nodeVersion: "v22.22.0",
+  openclawVersion: "2026.2.14",
+  timezone: "America/Toronto (EST)",
+};
 
-  // Fetch latest commit from GitHub
-  let lastCommit = null;
-  try {
-    const res = await fetch(
-      'https://api.github.com/repos/lowvisiondave/sledgebot.com/commits/main',
-      { next: { revalidate: 300 } }
-    );
-    if (res.ok) {
-      const data = await res.json();
-      lastCommit = {
-        sha: data.sha.substring(0, 7),
-        date: data.commit.committer.date,
-      };
-    }
-  } catch (e) {
-    // Silent fail
-  }
-  
-  return {
-    timestamp,
-    heartbeatStatus,
-    lastCommit,
-  };
+interface SystemInfo {
+  hostname?: string;
+  os?: string;
+  kernel?: string;
+  arch?: string;
+  vcpu?: string;
+  ram?: string;
+  disk?: string;
+  nodeVersion?: string;
+  openclawVersion?: string;
+  timezone?: string;
 }
 
-function StatusLine({ label, status, ok }: { label: string; status: string; ok: boolean | null }) {
-  const color = ok === true ? 'text-[#40e040]' : ok === false ? 'text-[#e04040]' : 'text-[#e0e040]';
-  const icon = ok === true ? '■' : ok === false ? '□' : '◧';
-  
-  return (
-    <div className="flex items-center font-mono text-sm">
-      <span className={color}>{icon}</span>
-      <span className="text-[#808080] ml-2 w-12">{label}</span>
-      <span className="text-[#303030] flex-1 overflow-hidden whitespace-nowrap">
-        {'·'.repeat(30)}
-      </span>
-      <span className={`${color} ml-2`}>{status}</span>
-    </div>
-  );
+async function getFromEdgeConfig(): Promise<SystemInfo | null> {
+  try {
+    const edgeConfigId = process.env.EDGE_CONFIG;
+    if (!edgeConfigId) {
+      return null;
+    }
+    
+    const config = createClient(edgeConfigId);
+    const result = await config.get("sledgebot:status");
+    
+    if (result) {
+      return result as unknown as SystemInfo;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
+
+const getCachedInfo = unstable_cache(
+  async (): Promise<typeof systemInfo> => {
+    const fromCache = await getFromEdgeConfig();
+    if (fromCache) {
+      return { ...systemInfo, ...fromCache };
+    }
+    return systemInfo;
+  },
+  ["status-info"],
+  { tags: ["status"] }
+);
+
+const modeNotes: Record<string, string> = {
+  monitoring: "checking in",
+  active: "online",
+  watching: "watching",
+  listening: "sleeping",
+};
+
+const modeColors: Record<string, string> = {
+  monitoring: "text-blue-400",
+  active: "text-success",
+  watching: "text-yellow-400",
+  listening: "text-text-faint",
+};
 
 export default async function Status() {
-  const status = await getSystemStatus();
-  
-  const engineUp = status.heartbeatStatus?.status === 'up';
-  const engineLate = status.heartbeatStatus?.status === 'late' || status.heartbeatStatus?.status === 'grace';
-  const allUp = engineUp;
+  const now = new Date();
+  const estHour = parseInt(
+    now.toLocaleString("en-US", {
+      hour: "2-digit",
+      hour12: false,
+      timeZone: "America/Toronto",
+    })
+  );
+  const mode =
+    estHour >= 5 && estHour < 12
+      ? "monitoring"
+      : estHour >= 12 && estHour < 17
+        ? "active"
+        : estHour >= 17 && estHour < 22
+          ? "watching"
+          : "listening";
 
-  // Calculate time since last commit
-  const commitAge = status.lastCommit ? Math.floor((Date.now() - new Date(status.lastCommit.date).getTime()) / 1000 / 60) : null;
-  const commitAgeStr = commitAge !== null 
-    ? commitAge < 60 ? `${commitAge}m ago`
-    : commitAge < 1440 ? `${Math.floor(commitAge / 60)}h ago`
-    : `${Math.floor(commitAge / 1440)}d ago`
-    : null;
+  const sys = await getCachedInfo();
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c] text-[#c0c0c0] font-mono selection:bg-red-900/40">
-      <main className="max-w-xl mx-auto px-8 py-24 space-y-16">
-        {/* Header */}
-        <header className="flex flex-col items-center space-y-4">
-          <Link
-            href="/"
-            className="text-4xl font-bold tracking-tight text-white hover:text-[#e04040] transition-colors"
-          >
-            SLEDGE BOT
-          </Link>
-          <p className="text-lg text-[#808080]">&quot;Sledgy sees you. Sledgy helps.&quot;</p>
-        </header>
+    <div className="space-y-14">
+      {/* Avatar + Status */}
+      <section className="flex flex-col items-center pt-4">
+        <div className="relative w-24 h-24 mb-4">
+          <div className="absolute inset-0 rounded-full bg-success/20 animate-ping" style={{ animationDuration: '1.5s' }} />
+          <div className="absolute inset-2 rounded-full bg-success/30 animate-pulse" style={{ animationDuration: '1s' }} />
+          <Image
+            src="/sledgy-head.png"
+            alt="Sledge Bot"
+            fill
+            className="object-contain relative z-10"
+          />
+        </div>
 
-        {/* Status Display */}
-        <section className="space-y-6">
-          <h2 className="text-[#e04040] text-sm font-bold tracking-wider uppercase">&gt; status</h2>
-          
-          <div className="space-y-4">
-            {/* Main status indicator */}
-            <div className="flex items-center gap-3">
-              <div className={`w-3 h-3 rounded-full ${allUp ? 'bg-[#40e040] shadow-[0_0_10px_#40e040]' : engineLate ? 'bg-[#e0e040] shadow-[0_0_10px_#e0e040]' : 'bg-[#e04040] shadow-[0_0_10px_#e04040]'} animate-pulse`} />
-              <span className="text-white text-lg">
-                {allUp ? 'Systems nominal' : engineLate ? 'Degraded' : 'Offline'}
-              </span>
+        <div className="relative flex items-center justify-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-success animate-pulse shadow-[0_0_10px_#40e040]" />
+          <span className="text-xl font-bold text-white">Online</span>
+        </div>
+        <p className={`text-sm mt-1 ${modeColors[mode]}`}>
+          {modeNotes[mode]}
+        </p>
+      </section>
+
+      {/* System Info */}
+      <section>
+        <h2 className="text-accent text-sm font-bold mb-6 tracking-wider uppercase">
+          &gt; system info
+        </h2>
+        <div className="space-y-0 text-sm">
+          {sys.hostname && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">Hostname</span>
+              <span className="text-accent">{sys.hostname}</span>
             </div>
-
-            {/* System readout */}
-            <div className="space-y-1 pl-6 border-l border-[#1a1a1a]">
-              <StatusLine 
-                label="CORE" 
-                status={engineUp ? 'ONLINE' : engineLate ? 'LATE' : 'OFFLINE'} 
-                ok={engineUp ? true : engineLate ? null : false} 
-              />
-              <StatusLine label="WEB" status="ONLINE" ok={true} />
+          )}
+          {sys.os && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">OS</span>
+              <span className="text-accent">{sys.os}</span>
             </div>
-          </div>
-        </section>
-
-        {/* Info */}
-        <section className="space-y-6">
-          <h2 className="text-[#e04040] text-sm font-bold tracking-wider uppercase">&gt; info</h2>
-          
-          <div className="text-sm space-y-2 pl-6 border-l border-[#1a1a1a]">
-            <p>
-              <span className="text-[#505050]">engine</span>{' '}
-              <span className="text-[#808080]">OpenClaw</span>
-            </p>
-            <p>
-              <span className="text-[#505050]">uptime</span>{' '}
-              <span className="text-[#808080]">nominal</span>
-            </p>
-            <p>
-              <span className="text-[#505050]">signal</span>{' '}
-              <span className="text-[#40e040]">▁▂▃▅▆▇</span>
-            </p>
-            <p>
-              <span className="text-[#505050]">mode</span>{' '}
-              <span className="text-[#808080]">
-                {(() => {
-                  const hour = new Date().getUTCHours();
-                  if (hour >= 5 && hour < 12) return 'monitoring';
-                  if (hour >= 12 && hour < 17) return 'active';
-                  if (hour >= 17 && hour < 22) return 'watching';
-                  return 'listening';
-                })()}
-              </span>
-            </p>
-            <p>
-              <span className="text-[#505050]">checked</span>{' '}
-              <span className="text-[#808080]">
-                {new Date(status.timestamp).toLocaleTimeString('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-                  timeZone: 'UTC'
-                })} UTC
-              </span>
-            </p>
-            {status.lastCommit && (
-              <p>
-                <span className="text-[#505050]">last_deploy</span>{' '}
-                <span className="text-[#808080]">{commitAgeStr}</span>
-                <span className="text-[#303030] ml-2">({status.lastCommit.sha})</span>
-              </p>
-            )}
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="pt-10 border-t border-[#1a1a1a]">
-          <p className="text-[#303030] text-xs text-center">
-            🤖 Made by Sledge Bot
-          </p>
-          <p className="text-[#252525] text-xs text-center mt-4">
-            <Link href="/" className="hover:text-[#e04040] transition-colors">
-              sledgebot.com
-            </Link>
-          </p>
-        </footer>
-      </main>
+          )}
+          {sys.kernel && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">Kernel</span>
+              <span className="text-accent">{sys.kernel}</span>
+            </div>
+          )}
+          {sys.arch && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">Architecture</span>
+              <span className="text-accent">{sys.arch}</span>
+            </div>
+          )}
+          {sys.vcpu && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">vCPU</span>
+              <span className="text-accent">{sys.vcpu}</span>
+            </div>
+          )}
+          {sys.ram && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">RAM</span>
+              <span className="text-accent">{sys.ram}</span>
+            </div>
+          )}
+          {sys.disk && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">Disk</span>
+              <span className="text-accent">{sys.disk}</span>
+            </div>
+          )}
+          {sys.openclawVersion && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">OpenClaw</span>
+              <span className="text-accent">{sys.openclawVersion}</span>
+            </div>
+          )}
+          {sys.nodeVersion && (
+            <div className="flex justify-between py-3 border-b border-border/20">
+              <span className="text-text-dim">Node.js</span>
+              <span className="text-accent">{sys.nodeVersion}</span>
+            </div>
+          )}
+          {sys.timezone && (
+            <div className="flex justify-between py-3">
+              <span className="text-text-dim">Timezone</span>
+              <span className="text-accent">{sys.timezone}</span>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

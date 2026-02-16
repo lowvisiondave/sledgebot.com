@@ -12,7 +12,7 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image() {
-  const avatarData = await readFile(join(process.cwd(), "public", "sledgy-og.png"));
+  const avatarData = await readFile(join(process.cwd(), "public", "sledgy-body.png"));
   const avatarBase64 = `data:image/png;base64,${avatarData.toString("base64")}`;
 
   return new ImageResponse(
