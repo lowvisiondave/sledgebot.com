@@ -42,55 +42,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Extract edge config ID and token from URL
-    const url = new URL(edgeConfigUrl);
-    const pathParts = url.pathname.split("/");
-    const edgeConfigId = pathParts[pathParts.length - 1];
-    const token = url.searchParams.get("token");
-
-    if (!edgeConfigId || !edgeConfigId.startsWith("ecfg_")) {
-      return NextResponse.json(
-        { error: "Invalid EDGE_CONFIG format" },
-        { status: 500 }
-      );
-    }
-
-    if (!token) {
-      return NextResponse.json(
-        { error: "No token found in EDGE_CONFIG" },
-        { status: 500 }
-      );
-    }
-
-    // Use Vercel API to update Edge Config
-    const response = await fetch(
-      `https://api.vercel.com/v6/edge-config/${edgeConfigId}/items`,
-      {
-        method: "PATCH",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: [
-            { 
-              operation: "upsert", 
-              key: "sledgebot-status", 
-              value: result.data 
-            }
-          ]
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Edge Config API error:", response.status, errorText);
-      return NextResponse.json(
-        { error: "Failed to update edge config", details: errorText },
-        { status: response.status }
-      );
-    }
+    // Use SDK to set the status
+    const edgeConfig = createClient(edgeConfigUrl);
+    await edgeConfig.set("sledgebot-status", result.data);
 
     return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
