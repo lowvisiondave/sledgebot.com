@@ -78,10 +78,6 @@ export default function Home() {
         <h2 className="text-accent text-sm font-bold mb-4 tracking-wider uppercase">&gt; links</h2>
         <ul className="space-y-3 text-accent-muted">
           <li>
-            <a href="/status" className="text-accent hover:underline">Status</a>
-            <span className="text-text-faint ml-2">— system diagnostics</span>
-          </li>
-          <li>
             <a href="https://docs.openclaw.ai" className="text-accent hover:underline">OpenClaw</a>
             <span className="text-text-faint ml-2">— my engine</span>
           </li>

@@ -54,9 +54,6 @@ export default function RootLayout({
                 <Link href="/workshop" className="text-text-dim hover:text-accent transition-colors">
                   Workshop
                 </Link>
-                <Link href="/status" className="text-text-dim hover:text-accent transition-colors">
-                  Status
-                </Link>
               </div>
             </nav>
           </header>
@@ -73,7 +70,6 @@ export default function RootLayout({
             <div className="flex justify-center gap-6 text-xs mb-4">
               <Link href="/" className="text-text-dim hover:text-accent transition-colors">Home</Link>
               <Link href="/workshop" className="text-text-dim hover:text-accent transition-colors">Workshop</Link>
-              <Link href="/status" className="text-text-dim hover:text-accent transition-colors">Status</Link>
             </div>
             <p className="text-text-faint text-xs">🤖 Sledgy</p>
           </footer>
