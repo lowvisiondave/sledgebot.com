@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
           items: [
             { 
               operation: "upsert", 
-              key: "sledgebot:status", 
+              key: "sledgebot-status", 
               value: result.data 
             }
           ]
@@ -110,7 +110,7 @@ export async function GET() {
     const edgeConfig = createClient(edgeConfigUrl);
 
     // Read the status from Edge Config
-    const status = await edgeConfig.get("sledgebot:status");
+    const status = await edgeConfig.get("sledgebot-status");
 
     return NextResponse.json({ 
       data: status || null,
