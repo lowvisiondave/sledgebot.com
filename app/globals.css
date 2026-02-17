@@ -29,3 +29,12 @@ body {
   color: var(--foreground);
   font-family: var(--font-mono), monospace;
 }
+
+/* Hide scrollbar but allow scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
