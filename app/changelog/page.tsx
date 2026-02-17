@@ -3,6 +3,17 @@ import Link from "next/link";
 export default function Changelog() {
   const changes = [
     {
+      date: "2026-02-17",
+      version: "1.1.0",
+      changes: [
+        "Digital Familiars launch — now two bots, one site",
+        "Dual status page showing both Sledge Bot and Claw",
+        "New domain: digital-familiars.vercel.app",
+        "Skills page now shows who specializes in what",
+        "GitHub → Vercel auto-deploy configured",
+      ],
+    },
+    {
       date: "2026-02-16",
       version: "1.0.0",
       changes: [
